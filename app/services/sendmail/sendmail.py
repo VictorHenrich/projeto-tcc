@@ -32,12 +32,12 @@ class Sendmail:
 
             self.__server.connect(self.__host, self.__port)
 
-            if self.__credentials:
-                self.__server.login(*self.__credentials)
-
             if self.__tls:
                 self.__server.starttls()
                 self.__server.helo()
+
+            if self.__credentials:
+                self.__server.login(*self.__credentials)
 
     def disconnect(self) -> None:
         if self.__server:
