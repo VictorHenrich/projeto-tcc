@@ -12,3 +12,5 @@ __PAYLOAD_AUTHENTICATION_USER__: Mapping[str, Any] = {
     'uuid_user': "",
     'expired': 0
 }
+
+__TIPOS_CONTAS_RECEBER_PAGAR__: Sequence[str] = 'PAG', 'REC'
