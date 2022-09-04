@@ -13,7 +13,7 @@ class BuilderDefaultDialect:
     username: Optional[str] = None
     password: Optional[str] = None
     debug: bool = False
-    has_async: bool = False
+    async_: bool = False
     name: str = "main"
     driver_default: str = ""
     driver_async: str = ""
@@ -44,8 +44,8 @@ class BuilderDefaultDialect:
 
         return self
 
-    def set_has_async(self, has_async: bool) -> BuilderDefaultDialect:
-        self.has_async = has_async
+    def set_async(self, async_: bool) -> BuilderDefaultDialect:
+        self.async_ = async_
 
         return self
 

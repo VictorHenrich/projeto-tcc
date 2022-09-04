@@ -3,13 +3,20 @@ import asyncio
 
 from .api import Api
 from .database import Databases
+from .websocket import ServerSocket
 
 
 
 class Server:
-    def __init__(self, api: Api, databases: Databases) -> None:
+    def __init__(
+        self, 
+        api: Api, 
+        databases: Databases,
+        websocket: Optional[ServerSocket] = None
+    ) -> None:
         self.__api: Api = api
         self.__databases: Databases = databases
+        self.__websocket: Optional[ServerSocket] = websocket
         self.__initial_functions: list[Callable] = []
 
     @property
@@ -20,6 +27,10 @@ class Server:
     def databases(self) -> Databases:
         return self.__databases
 
+    @property
+    def websocket(self) -> ServerSocket:
+        return self.__websocket
+        
     def start(self, function: Callable[[None], Any]) -> Callable[[None], Any]:
         self.__initial_functions.append(function)
 

@@ -1,6 +1,6 @@
 from services import server
 
-@server.start
+#@server.start
 def start_migrate():
     from src import models
 
@@ -11,7 +11,7 @@ def start_migrate():
 
 @server.start
 def start_api():
-    server.api.run()
+    server.websocket.run()
 
 
 server.start_server()

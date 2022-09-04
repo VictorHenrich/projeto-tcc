@@ -28,7 +28,7 @@ class Api(ApiFlask):
 
     @property
     def application(self) -> Flask:
-        return self.__app
+        return self.__application
 
     @property
     def configs(self) -> Mapping[str, Any]:

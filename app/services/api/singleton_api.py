@@ -11,14 +11,12 @@ class SingletonApi:
         cls,
         host: str,
         port: Union[str, int],
-        name: str = __name__,
-        debug: bool = False,
-        is_safe: bool = False,
+        **kwargs
     ) -> Api:
         if cls.__instance:
             raise Exception('Instantiates the Api has declared!')
 
-        api: Api = Api(host, port, name, debug, is_safe)
+        api: Api = Api(host, port, **kwargs)
 
         cls.__instance = api
 
