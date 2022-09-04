@@ -20,7 +20,7 @@ database: Database = server.databases.get_database()
 class Empresas(database.Model):
     __tablename__ = "empresas"
     id: int = Column(Integer, primary_key=True, nullable=False, unique=True, autoincrement=True)
-    id_uuid: str = Column(UUID(True), default=create_uuid, unique=True, nullable=False)
+    id_uuid: str = Column(UUID(False), default=create_uuid, unique=True, nullable=False)
     razao_social: str = Column(String(250), nullable=False)
     cnpj: str = Column(String(250), nullable=False)
     ativo: bool = Column(Boolean, default=True)
