@@ -1,12 +1,14 @@
+from abc import ABC, abstractmethod
 from flask import Response
 from typing import Any, Callable, Optional, Sequence, Mapping
 from .utils.responses import ResponseFailure
 
 
-class Middleware:
+class Middleware(ABC):
     @classmethod
+    @abstractmethod
     def initialize(cls, *args: Sequence[Any], **kwargs: Mapping[str, Any]) -> Optional[Mapping[str, Any]]:
-        raise NotImplementedError('Method "initialize" the middleware not implemented!')
+        pass
 
     @classmethod
     def redirect(cls, error: Exception) -> Response:

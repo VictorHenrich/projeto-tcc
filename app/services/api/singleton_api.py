@@ -1,11 +1,9 @@
-from ctypes import Union
-from typing import Optional
+from typing import Optional, Union
 from . import Api
+from ..utils.patterns import AbstractSingleton
 
 
-class SingletonApi:
-    __instance: Optional[Api] = None
-
+class SingletonApi(AbstractSingleton):
     @classmethod
     def get_instance(
         cls,
@@ -13,11 +11,11 @@ class SingletonApi:
         port: Union[str, int],
         **kwargs
     ) -> Api:
-        if cls.__instance:
+        if cls.instance:
             raise Exception('Instantiates the Api has declared!')
 
         api: Api = Api(host, port, **kwargs)
 
-        cls.__instance = api
+        cls.instance = api
 
         return api

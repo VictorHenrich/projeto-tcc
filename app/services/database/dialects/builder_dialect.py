@@ -3,10 +3,11 @@ from dataclasses import dataclass
 from typing import Optional, Union
 
 from .. import Database
+from ...utils.patterns import AbstractBuilder
 
 
 @dataclass
-class BuilderDefaultDialect:
+class BuilderDefaultDialect(AbstractBuilder):
     host: Optional[str] = None
     port: Optional[Union[str, int]] = None
     dbname: Optional[str] = None

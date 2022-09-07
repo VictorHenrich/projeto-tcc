@@ -2,11 +2,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Union
 from . import Api
+from ..utils.patterns import AbstractBuilder
 
 
 
 @dataclass
-class BuilderApi:
+class BuilderApi(AbstractBuilder):
     host: str = "localhost"
     port: Union[str, int] = 5000
     debug: bool = False

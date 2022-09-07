@@ -1,3 +1,4 @@
+from abc import ABC
 from flask_restful import Resource
 from flask import Response
 from typing import Sequence, Mapping, Any
@@ -5,7 +6,7 @@ from typing import Sequence, Mapping, Any
 from .utils.responses import ResponseNotFound
 
 
-class Controller(Resource):
+class Controller(Resource, ABC):
     def get(self, *args: Sequence[Any], **kwargs: Mapping[str, Any]) -> Response:
         return ResponseNotFound()
 
