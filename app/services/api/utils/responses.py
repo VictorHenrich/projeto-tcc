@@ -24,7 +24,7 @@ class ResponseSuccess(Response):
             "status": status_code,
         }
 
-        if data:
+        if data is not None:
             response['result'] = data
 
         response_json: str = json.dumps(response)
@@ -50,7 +50,7 @@ class ResponseFailure(Response):
             "status": status_code,
         }
 
-        if data:
+        if data is not None:
             response['result'] = data
 
         response_json: str = json.dumps(response)
@@ -76,7 +76,7 @@ class ResponseNotFound(Response):
             "status": status_code,
         }
 
-        if data:
+        if data is not None:
             response['result'] = data
 
         response_json: str = json.dumps(response)
@@ -102,7 +102,7 @@ class ResponseUnauthorized(Response):
             "status": status_code,
         }
 
-        if data:
+        if data is not None:
             response['result'] = data
 
         response_json: str = json.dumps(response)

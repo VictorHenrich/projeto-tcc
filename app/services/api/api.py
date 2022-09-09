@@ -11,16 +11,20 @@ class Api(ApiFlask):
         self,
         host: str,
         port: Union[str, int],
+        secret_key: str,
         name: str = __name__,
         debug: bool = False,
         is_safe: bool = False,
     ) -> None:
         self.__application: Flask = Flask(name)
 
+        self.__application.secret_key = secret_key
+
         self.__configs: Mapping[str, Any] = {
             'host': host,
             'port': port,
             'debug': debug,
+            'secret_key': secret_key,
             'is_safe': is_safe 
         }
 

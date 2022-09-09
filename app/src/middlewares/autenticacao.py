@@ -3,6 +3,7 @@ from flask import request, session
 from jwt import PyJWT
 from datetime import datetime
 
+from services import server
 from services.api import Middleware
 from services.database import Database
 from services import server
@@ -44,16 +45,23 @@ class AutenticacaoMiddleware(Middleware):
             if not usuario:
                 raise Exception('Usuario não localizado!')
 
+            return usuario
+
     @classmethod
     def initialize(cls) -> Mapping[str, Any]:
-        autenticacao: str = request.headers.get('Authentication') or session.get(__NAME_SESSION_USER__)
+        autenticacao: str = \
+            f"{request.headers.get('Authorization') or session.get(__NAME_SESSION_USER__)}"\
+                .replace('Bearer ', '')
 
         dados_autenticacao_jwt: Mapping[str, Any] = {
             prop: value
-            for prop, value in PyJWT().decode(autenticacao, __ALGORITHMS_JWT__)
+            for prop, value in PyJWT()\
+                                    .decode(autenticacao, server.api.configs['secret_key'], __ALGORITHMS_JWT__)\
+                                    .items()
+
             if prop in __PAYLOAD_AUTHENTICATION_USER__.keys()
         }
-
+        
         if dados_autenticacao_jwt['expired'] <= datetime.now().timestamp():
             raise Exception('Token expirado!')
 

@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import Union
 from . import Api
 from ..utils.patterns import AbstractBuilder
+from uuid import uuid4
 
 
 
@@ -12,6 +13,7 @@ class BuilderApi(AbstractBuilder):
     port: Union[str, int] = 5000
     debug: bool = False
     security: bool = False
+    secret_key: bool = str(uuid4())
 
     def set_host(self, host: str) -> BuilderApi:
         self.host = host
@@ -33,10 +35,16 @@ class BuilderApi(AbstractBuilder):
 
         return self
 
+    def set_secret_key(self, secret_key: str) -> BuilderApi:
+        self.secret_key = secret_key
+
+        return self
+
     def build(self) -> Api:
         return Api(
             host=self.host,
             port=self.port,
+            secret_key=self.secret_key,
             debug=self.debug,
             is_safe=self.security
         )
