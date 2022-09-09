@@ -36,7 +36,7 @@ class SubGruposProduto(database.Model):
 
     id: int = Column(Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
     id_uuid: str = Column(UUID(True), default=create_uuid)
-    id_empresa: int = Column(Integer, ForeignKey(f"{Empresas.__tablename__}.id"))
+    id_empresa: int = Column(Integer, ForeignKey(f"{Empresas.__tablename__}.id"), nullable=False)
     id_grupo: int = Column(Integer, ForeignKey(f"{GruposProduto.__tablename__}.id"))
     descricao: str = Column(String(255))
     data_cadastro: datetime = Column(DateTime, default=datetime.now)
