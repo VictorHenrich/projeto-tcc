@@ -68,16 +68,19 @@ class ProdutosController(Controller):
         else:
             resposta: list[Mapping[str, Any]] = \
                 [
-                    ModelProduto(
-                        descricao=produto.descricao,
-                        codigo_barras=produto.codigo_barras,
-                        data_cadastro=produto.data_cadastro,
-                        data_alteracao=produto.data_alteracao,
-                        valor_venda=produto.valor_venda,
-                        porcentagem_lucro=produto.porcentagem_lucro,
-                        valor_custo=produto.valor_custo,
-                        ativo=produto.ativo
-                    ).__dict__
+                    {
+                        **ModelProduto(
+                            descricao=produto.descricao,
+                            codigo_barras=produto.codigo_barras,
+                            data_cadastro=produto.data_cadastro,
+                            data_alteracao=produto.data_alteracao,
+                            valor_venda=produto.valor_venda,
+                            porcentagem_lucro=produto.porcentagem_lucro,
+                            valor_custo=produto.valor_custo,
+                            ativo=produto.ativo
+                        ).__dict__,
+                        'id_uuid': produto.id_uuid
+                    }
 
                     for produto in lista_produtos
                 ]
@@ -198,8 +201,8 @@ class ProdutosController(Controller):
                     session\
                         .query(Produtos)\
                         .filter(
-                            Produtos.id_empresa == auth_company.id_empresa,
-                            Produtos.id_uuid == hash_produto
+                            Produtos.id_empresa == auth_company.id,
+                            Produtos.id_uuid == str(hash_produto)
                         )\
                         .first()
 

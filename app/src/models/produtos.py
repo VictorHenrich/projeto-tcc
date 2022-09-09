@@ -23,7 +23,7 @@ class GruposProduto(database.Model):
     __tablename__: str = "grupos_produto"
 
     id: int = Column(Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
-    id_uuid: str = Column(UUID(True), default=create_uuid)
+    id_uuid: str = Column(UUID(False), default=create_uuid)
     id_empresa: int = Column(Integer, ForeignKey(f"{Empresas.__tablename__}.id"))
     descricao: str = Column(String(255))
     data_cadastro: datetime = Column(DateTime, default=datetime.now)
@@ -35,7 +35,7 @@ class SubGruposProduto(database.Model):
     __tablename__: str = "subgrupos_produto"
 
     id: int = Column(Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
-    id_uuid: str = Column(UUID(True), default=create_uuid)
+    id_uuid: str = Column(UUID(False), default=create_uuid)
     id_empresa: int = Column(Integer, ForeignKey(f"{Empresas.__tablename__}.id"), nullable=False)
     id_grupo: int = Column(Integer, ForeignKey(f"{GruposProduto.__tablename__}.id"))
     descricao: str = Column(String(255))
@@ -48,7 +48,7 @@ class Produtos(database.Model):
     __tablename__: str = "produtos"
 
     id: int = Column(Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
-    id_uuid: str = Column(UUID(True), default=create_uuid, nullable=False, unique=True)
+    id_uuid: str = Column(UUID(False), default=create_uuid, nullable=False, unique=True)
     id_empresa: int = Column(Integer, ForeignKey(f"{Empresas.__tablename__}.id"), nullable=False)
     id_usuario_alteracao: int = Column(Integer, ForeignKey(f"{Usuarios.__tablename__}.id"))
     id_grupo: int = Column(Integer, ForeignKey(f"{GruposProduto.__tablename__}.id"))

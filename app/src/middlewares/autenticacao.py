@@ -45,6 +45,8 @@ class AutenticacaoMiddleware(Middleware):
             if not usuario:
                 raise Exception('Usuario não localizado!')
 
+            return usuario
+
     @classmethod
     def initialize(cls) -> Mapping[str, Any]:
         autenticacao: str = \
@@ -59,7 +61,6 @@ class AutenticacaoMiddleware(Middleware):
 
             if prop in __PAYLOAD_AUTHENTICATION_USER__.keys()
         }
-
         
         if dados_autenticacao_jwt['expired'] <= datetime.now().timestamp():
             raise Exception('Token expirado!')
