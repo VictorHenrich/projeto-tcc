@@ -32,7 +32,7 @@ class GruposProduto(database.Model):
 
 
 class SubGruposProduto(database.Model):
-    __tablename__: str = "grupos_produto"
+    __tablename__: str = "subgrupos_produto"
 
     id: int = Column(Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
     id_uuid: str = Column(UUID(True), default=create_uuid)

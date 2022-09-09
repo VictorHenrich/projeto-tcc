@@ -14,4 +14,4 @@ class ValidacaoParametrosRequisicaoMiddleware(Middleware):
             raise Exception('Parametros da requisição não atende aos requisitos solicitados!')
 
         else:
-            {'params_request': object_params}
+            return {'params_request': object_params}

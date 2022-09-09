@@ -36,7 +36,7 @@ class AutenticacaoController(Controller):
         with database.create_session() as session:
             empresa: Empresas = \
                 session\
-                    .query()\
+                    .query(Empresas)\
                     .filter(Empresas.id_uuid == hash_empresa)\
                     .first()
 
@@ -59,6 +59,8 @@ class AutenticacaoController(Controller):
             if not usuario:
                 raise Exception('Usuario não localizado!')
 
+            return usuario
+
     @ValidacaoParametrosRequisicaoMiddleware.apply(ParametrosAutenticacao)
     def get(self, params_request: ParametrosAutenticacao) -> Response:
         try:
@@ -72,7 +74,7 @@ class AutenticacaoController(Controller):
             dados_autenticacao['expired'] = (datetime.now() + timedelta(minutes=5)).timestamp()
 
             token: str = \
-                f"Bearer {PyJWT().encode(dados_autenticacao, algorithm=list(__ALGORITHMS_JWT__)[0])}"
+                f"Bearer {PyJWT().encode(dados_autenticacao, key=server.api.configs['secret_key'], algorithm=list(__ALGORITHMS_JWT__)[0])}"
 
 
             session[__NAME_SESSION_USER__] = token
