@@ -1,7 +1,7 @@
 from services import server
 
 
-@server.start
+#@server.start
 def start_migrate():
     from src import models
 

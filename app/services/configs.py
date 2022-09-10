@@ -15,7 +15,7 @@ __API__: Api = \
 __DATABASES__: list[Database] = [
     Postgres() \
         .set_host('localhost') \
-        .set_dbname('banco_teste') \
+        .set_dbname('projeto-tcc') \
         .set_credentials('postgres', '1234') \
         .set_debug(False) \
         .set_async(False) \

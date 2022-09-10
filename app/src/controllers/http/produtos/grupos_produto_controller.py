@@ -66,12 +66,15 @@ class CrudGruposProdutoController(Controller):
         else:
             resposta: list[GruposProduto] = \
                 [
-                    ModelGruposProduto(
-                        descricao=grupo.descricao,
-                        data_cadastro=grupo.data_cadastro,
-                        valor_acrescimo=grupo.valor_acrescimo,
-                        valor_desconto=grupo.valor_desconto
-                    ).__dict__
+                    {
+                        **ModelGruposProduto(
+                            descricao=grupo.descricao,
+                            data_cadastro=grupo.data_cadastro,
+                            valor_acrescimo=grupo.valor_acrescimo,
+                            valor_desconto=grupo.valor_desconto
+                        ).__dict__,
+                        "id_uuid": grupo.id_uuid
+                    }
 
                     for grupo in lista_grupos
                 ]
@@ -133,6 +136,7 @@ class CrudGruposProdutoController(Controller):
             grupo_localizado.valor_desconto = body_request.valor_desconto
             grupo_localizado.data_alteracao = datetime.now()
 
+            session.add(grupo_localizado)
             session.commit()
 
         except Exception as error:
@@ -155,7 +159,7 @@ class CrudGruposProdutoController(Controller):
                         .query(GruposProduto)\
                         .filter(
                             GruposProduto.id_empresa == auth_company.id,
-                            GruposProduto.id_uuid == hash_grupo
+                            GruposProduto.id_uuid == str(hash_grupo)
                         )\
                         .first()
 

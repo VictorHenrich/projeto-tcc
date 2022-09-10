@@ -49,14 +49,21 @@ class AutenticacaoMiddleware(Middleware):
 
     @classmethod
     def initialize(cls) -> Mapping[str, Any]:
-        autenticacao: str = \
-            f"{request.headers.get('Authorization') or session.get(__NAME_SESSION_USER__)}"\
-                .replace('Bearer ', '')
+        autenticacao: str = request.headers.get('Authorization') or session.get(__NAME_SESSION_USER__)
+
+        if not autenticacao:
+            raise Exception('Parametro de autenticação não definido!')
+
+        autenticacao_tratada: str = autenticacao.replace('Bearer ', '')
 
         dados_autenticacao_jwt: Mapping[str, Any] = {
             prop: value
             for prop, value in PyJWT()\
-                                    .decode(autenticacao, server.api.configs['secret_key'], __ALGORITHMS_JWT__)\
+                                    .decode(
+                                        autenticacao_tratada, 
+                                        server.api.configs['secret_key'], 
+                                        __ALGORITHMS_JWT__
+                                    )\
                                     .items()
 
             if prop in __PAYLOAD_AUTHENTICATION_USER__.keys()
