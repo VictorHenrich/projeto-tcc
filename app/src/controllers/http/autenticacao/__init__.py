@@ -1,0 +1,1 @@
+from .autenticacao_controller import AutenticacaoController

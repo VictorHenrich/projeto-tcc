@@ -1,0 +1,2 @@
+from .grupos_produto_controller import CrudGruposProdutoController
+from .produtos_controller import CrudProdutosController

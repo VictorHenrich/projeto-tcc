@@ -27,6 +27,7 @@ class GruposProduto(database.Model):
     id_empresa: int = Column(Integer, ForeignKey(f"{Empresas.__tablename__}.id"))
     descricao: str = Column(String(255))
     data_cadastro: datetime = Column(DateTime, default=datetime.now)
+    data_alteracao: datetime = Column(DateTime)
     valor_acrescimo: float = Column(Float, default=0, nullable=False)
     valor_desconto: float = Column(Float, default=0, nullable=False)
 
@@ -40,6 +41,7 @@ class SubGruposProduto(database.Model):
     id_grupo: int = Column(Integer, ForeignKey(f"{GruposProduto.__tablename__}.id"))
     descricao: str = Column(String(255))
     data_cadastro: datetime = Column(DateTime, default=datetime.now)
+    data_alteracao: datetime = Column(DateTime)
     valor_acrescimo: float = Column(Float, default=0, nullable=False)
     valor_desconto: float = Column(Float, default=0, nullable=False)
 

@@ -45,7 +45,7 @@ class ModelProduto:
 
 
 
-class ProdutosController(Controller):
+class CrudProdutosController(Controller):
     @AutenticacaoMiddleware.apply()
     def get(
         self, 
