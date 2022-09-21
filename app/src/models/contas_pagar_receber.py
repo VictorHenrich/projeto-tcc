@@ -1,4 +1,5 @@
 from datetime import datetime, date
+from typing import Sequence
 from sqlalchemy import (
     Column,
     Integer,
@@ -22,6 +23,8 @@ database: Database = server.databases.get_database()
 
 
 class ContasPagarReceber(database.Model):
+    tipos_conta: Sequence[str] = "PAG", "REC"
+
     __tablename__: str = "contas_receber_pagar"
     id: int = Column(Integer, primary_key=True, nullable=False, unique=True, autoincrement=True)
     id_uuid: str = Column(UUID(False), unique=True, nullable=False, default=create_uuid)
