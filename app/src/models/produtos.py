@@ -39,7 +39,7 @@ class SubGruposProduto(database.Model):
     id_uuid: str = Column(UUID(False), default=create_uuid)
     id_empresa: int = Column(Integer, ForeignKey(f"{Empresas.__tablename__}.id"), nullable=False)
     id_grupo: int = Column(Integer, ForeignKey(f"{GruposProduto.__tablename__}.id"))
-    descricao: str = Column(String(255))
+    descricao: str = Column(String(255), nullable=False)
     data_cadastro: datetime = Column(DateTime, default=datetime.now)
     data_alteracao: datetime = Column(DateTime)
     valor_acrescimo: float = Column(Float, default=0, nullable=False)
