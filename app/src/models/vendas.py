@@ -45,6 +45,7 @@ class ItensVenda(database.Model):
     id_empresa: int = Column(Integer, ForeignKey(f"{Empresas.__tablename__}.id"), nullable=False)
     id_produto: int = Column(Integer, ForeignKey(f"{Produtos.__tablename__}.id"), nullable=False, primary_key=True)
     id_venda: int = Column(Integer, ForeignKey(f"{Vendas.__tablename__}.id"), nullable=False, primary_key=True)
+    quantidade: int = Column(Integer, default=0, nullable=False)
 
 
 
