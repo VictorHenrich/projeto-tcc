@@ -1,6 +1,8 @@
-from typing import Any, Optional, Mapping
+from typing import Any, Optional, Mapping, Union
 from datetime import datetime
 from uuid import UUID
+from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from services import server
 from services.database import Database
@@ -51,6 +53,57 @@ class ModelContaPagarReceber:
 
 
 class CrudContasReceberPagarController(Controller):
+
+    def __localizar_conta_pagar_receber(
+        self,
+        empresa: Empresas,
+        hash_conta: UUID,
+        session: Union[Session, AsyncSession]
+    ) -> ContasPagarReceber:
+        conta_pagar_receber: ContasPagarReceber = \
+            session\
+                .query(ContasPagarReceber)\
+                .filter(
+                    ContasPagarReceber.id_empresa == empresa.id,
+                    ContasPagarReceber.id_uuid == str(hash_conta)
+                )\
+                .first()
+
+        if not conta_pagar_receber:
+            raise Exception('Conta não foi localizada!')
+
+        return conta_pagar_receber
+        
+    def __localizar_contas_pagar_receber(
+        self,
+        empresa: Empresas,
+        session: Union[Session, AsyncSession]
+    ) -> list[Mapping[str, Any]]:
+
+        lista_contas_pagar_receber: list[ContasPagarReceber] = \
+            session\
+                .query(ContasPagarReceber)\
+                .filter(
+                    ContasPagarReceber.id_empresa == empresa.id
+                )\
+                .all()
+
+        return [
+            {
+                **ModelContaPagarReceber(
+                    valor=conta.valor,
+                    tipo=conta.tipo,
+                    data_cadastro=conta.data_cadastro,
+                    data_alteracao=conta.data_alteracao,
+                    data_documento=conta.data_documento,
+                    obs=conta.obs
+                ).__dict__,
+
+                "id_uuid": conta.id_uuid
+            }
+            for conta in lista_contas_pagar_receber
+        ]
+
     @AutenticacaoMiddleware.apply()
     def get(
         self, 
@@ -59,37 +112,17 @@ class CrudContasReceberPagarController(Controller):
     ) -> Response:
         try:
             with database.create_session() as session:
-                lista_contas_pagar_receber: list[ContasPagarReceber] = \
-                    session\
-                        .query(ContasPagarReceber)\
-                        .filter(
-                            ContasPagarReceber.id_empresa == auth_company.id
-                        )\
-                        .all()
-
+                lista_contas_pagar_receber: list[Mapping[str, Any]] = \
+                    self.__localizar_contas_pagar_receber(
+                        auth_company,
+                        session
+                    )
 
         except Exception as error:
             return ResponseFailure(data=str(error))
 
         else:
-            resposta: list[Mapping[str, Any]] = \
-                [
-                    {
-                        **ModelContaPagarReceber(
-                            valor=conta.valor,
-                            tipo=conta.tipo,
-                            data_cadastro=conta.data_cadastro,
-                            data_alteracao=conta.data_alteracao,
-                            data_documento=conta.data_documento,
-                            obs=conta.obs
-                        ).__dict__,
-
-                        "id_uuid": conta.id_uuid
-                    }
-                    for conta in lista_contas_pagar_receber
-                ]
-
-            return ResponseSuccess(data=resposta)
+            return ResponseSuccess(data=lista_contas_pagar_receber)
 
     @AutenticacaoMiddleware.apply()
     @ValidacaoCorpoRequisicaoMiddleware.apply(ModelContaPagarReceber)
@@ -116,3 +149,65 @@ class CrudContasReceberPagarController(Controller):
 
         else:
             return ResponseSuccess()
+
+    @AutenticacaoMiddleware.apply()
+    @ValidacaoCorpoRequisicaoMiddleware.apply(ModelContaPagarReceber)
+    def put(
+        self,
+        auth_company: Empresas,
+        auth_user: Usuarios,
+        body_request: ModelContaPagarReceber,
+        hash_conta: UUID
+    ) -> Response:
+        try:
+            with database.create_session() as session:
+                conta_pagar_receber_localizada: ContasPagarReceber = \
+                    self.__localizar_conta_pagar_receber(
+                        auth_company,
+                        hash_conta,
+                        session
+                    )
+
+                conta_pagar_receber_localizada.id_usuario_alt = auth_user.id
+                conta_pagar_receber_localizada.tipo = body_request.tipo
+                conta_pagar_receber_localizada.valor = body_request.valor
+                conta_pagar_receber_localizada.data_documento = body_request.data_documento
+                conta_pagar_receber_localizada.data_alteracao = datetime.now()
+
+                session.add(conta_pagar_receber_localizada)
+                session.commit()
+
+        except Exception as error:
+            return ResponseFailure(data=str(error))
+
+        else:
+            return ResponseSuccess()
+
+    @AutenticacaoMiddleware.apply()
+    def delete(
+        self,
+        auth_company: Empresas,
+        auth_user: Usuarios,
+        hash_conta: UUID
+    ) -> Response:
+        try:
+            with database.create_session() as session:
+                conta_pagar_receber_localizada: ContasPagarReceber = \
+                    self.__localizar_conta_pagar_receber(
+                        auth_company,
+                        hash_conta,
+                        session
+                    )
+
+                session.delete(conta_pagar_receber_localizada)
+                session.commit()
+
+        except Exception as error:
+            return ResponseFailure(data=str(error))
+
+        else:
+            return ResponseSuccess()
+
+                
+
+                
